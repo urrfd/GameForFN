@@ -1,16 +1,40 @@
 #include "raylib.h"
 
-typedef enum GameScreen { MENU, QUIZ, DODGE, VICTORY } GameScreen;
+typedef enum GameScreen { MENU, QUIZ, DODGE, COLLECT, VICTORY } GameScreen;
 
 int main(void) {
     InitWindow(800, 600, "Quiz + Minigames");
     SetTargetFPS(60);
 
+
+
+
+    // things to collect
+
+        Rectangle obs[3] = {
+        { -50, 150, 40, 40 },
+        { -100, 300, 50, 50 },
+        { -200, 450, 30, 30 }
+    };
+    Vector2 velocity[3] = {
+        { 3, 0 },
+        { 2, 0 },
+        { 4, 0 }
+    };
+
+
+
+    
     GameScreen currentScreen = MENU;
     bool shouldExit = false;
+    
+    
+
 
     // Player for the dodge game
     Vector2 player = {400, 300};
+    Vector2 mouse = GetMousePosition();
+    Rectangle mousehitbox = {mouse.x, mouse.y, 10, 10};
 
     // Victory message (changes depending on minigame)
     const char *victoryMsg = "YOU WIN!";
@@ -91,6 +115,12 @@ int main(void) {
                 DrawText("Press [ESC] to return", 250, 140, 20, DARKGRAY);
 
                 DrawRectangleV(player, (Vector2){40, 40}, BLUE);
+                break;
+
+            case COLLECT:
+                DrawText("move your mouse and collect all items to win!", 220, 100, 20, DARKGRAY);
+                DrawText("Press [ESC] to return", 250, 140, 20, DARKGRAY);
+                
                 break;
 
             case VICTORY:
