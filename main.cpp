@@ -1,18 +1,23 @@
 #include "raylib.h"
 
+
+#define MAX_TRASH 3
+
+
 typedef enum GameScreen { MENU, QUIZ, DODGE, COLLECT, VICTORY } GameScreen;
+
 
 int main(void) {
     InitWindow(800, 600, "Quiz + Minigames");
     SetTargetFPS(60);
 
     // Things to collect
-    Rectangle trash[3] = {
+    Rectangle trash[MAX_TRASH] = {
         { -50, 150, 40, 40 },
         { -100, 300, 50, 50 },
         { -200, 450, 30, 30 }
     };
-    Vector2 velocity[3] = {
+    Vector2 velocity[MAX_TRASH] = {
         { 3, 0 },
         { 2, 0 },
         { 4, 0 }
@@ -77,7 +82,7 @@ int main(void) {
                 Vector2 mouse = GetMousePosition();
                 Rectangle mousehitbox = {mouse.x, mouse.y, 10, 10};
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < MAX_TRASH; i++) {
                     // Move trash if not collected
                     if (!collected[i]) {
                         trash[i].x += velocity[i].x;
@@ -122,18 +127,17 @@ int main(void) {
                 DrawText("Press [1] Quiz",        260, 200, 30, DARKGRAY);
                 DrawText("Press [2] Dodge Game",  260, 250, 30, DARKGRAY);
                 DrawText("Press [3] Collect Game",260, 300, 30, DARKGRAY);
+                DrawText("Press [ESC] to Exit",  260, 350, 30, DARKGRAY);
                 break;
 
             case QUIZ:
                 DrawText("QUIZ SCREEN!", 280, 200, 40, RED);
                 DrawText("Press [SPACE] to WIN", 250, 300, 30, DARKGRAY);
-                DrawText("Press [ESC] to return", 250, 350, 30, DARKGRAY);
                 break;
 
             case DODGE:
                 DrawText("DODGE GAME!", 280, 50, 40, RED);
                 DrawText("Reach the right side to win!", 200, 100, 20, DARKGRAY);
-                DrawText("Press [ESC] to return", 250, 140, 20, DARKGRAY);
 
                 DrawRectangleV(player, (Vector2){40, 40}, BLUE);
                 break;
@@ -144,7 +148,7 @@ int main(void) {
                 Vector2 mouse = GetMousePosition();
                 Rectangle mousehitbox = {mouse.x, mouse.y, 10, 10};
 
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < MAX_TRASH; i++) {
                     DrawRectangleRec(trash[i], RED);
                 }
 
