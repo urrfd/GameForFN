@@ -1,26 +1,42 @@
-# Raylib C++ Starter Template
+# Simple and portable CMake template for raylib
 
-Raylib C++ Starter Template for Visual Studio Code on Windows.
+This is a basic project template for raylib using CMake and has been tested with Visual Studio, Visual Studio Code and CLion.
 
-This demo project contains a bouncing ball raylib example program.
+The master branch of the raylib source code is downloaded using CMake FetchContent from github and compiled from source as it is much easier than including prebuilt binaries for every platform and configuration.
 
-It works with raylib version 4.5.
-Tested on both Windows 10 and Windows 11.
+Building from the cmake file will build both raylib and `src/main.c` which includes a basic example of a raylib program.
 
-# Video Tutorial
+## Asset handling
 
-<p align="center">
-  <img src="preview.jpg" alt="" width="800">
-</p>
+The example in `src/main.c` uses an example image located in the `assets` folder.
+To load it we use `ASSETS_PATH`, which is a string macro with the *absolute* path "assets" directory.
+This macro is defined in the `CMakeLists.txt` file on line `23`.
+ 
+If you plan on releasing or sharing your game consider manually setting the value of the `ASSETS_PATH` macro.
 
-<p align="center">
-🎥 <a href="https://www.youtube.com/watch?v=PaAcVk5jUd8">Video Tutorial on YouTube</a>
-</p>
+In C you can concatenate string literals by putting them next to each other, 
+eg: `"A" "B"` is `"AB"`. So ASSETS_PATH `"test.png"` becomes `"/path/to/your/assets/test.png"`
 
-<br>
-<br>
-<p align="center">
-| 📺 <a href="https://www.youtube.com/channel/UC3ivOTE5EgpmF2DHLBmWIWg">My YouTube Channel</a>
-| 🌍 <a href="https://www.programmingwithnick.com">My Website</a> | <br>
-</p>
+If you wanna share your game with others you should set ASSETS_PATH to be a *relative* path like "./assets/". You can do this in the CMakeLists.txt file. 
 
+## Using C++
+
+Using c++ is quite simple, just change these lines in the `CMakeLists.txt`
+from
+```
+project(my_raylib_game C)
+
+set(CMAKE_C_STANDARD 99)
+
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.c")
+```
+to
+```
+project(my_raylib_game CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/sources/*.cpp")
+```
+After this just reload cmake and it should build fine.
