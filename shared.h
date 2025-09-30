@@ -3,7 +3,6 @@
 
 #include "raylib.h"
 
-// Shared enum between all game files
 typedef enum GameScreen {
     MENU,
     QUIZ,

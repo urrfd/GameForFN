@@ -2,20 +2,46 @@
 #include "quiz.h"
 #include "collect.h"
 #include "dodge.h"
+#include "raylib.h"
+
 
 int main(void) {
     InitWindow(800, 600, "Quiz + Minigames");
+    InitAudioDevice(); 
     SetTargetFPS(60);
 
     GameScreen currentScreen = MENU;
     const char* victoryMsg = "YOU WIN!";
 
+    Music musicShallows = LoadMusicStream("assets/sounds/music/shallows.mp3");
+    Music musicBeach = LoadMusicStream("assets/sounds/music/beach.mp3");
+    PlayMusicStream(musicShallows);
+    Music* currentMusic = &musicShallows;
+    bool isBeachPlaying = false;
+
+    
+
     while (!WindowShouldClose()) {
-        // --- UPDATE ---
+        UpdateMusicStream(*currentMusic);
+
+        // Switch music only when needed
+        if (currentScreen == VICTORY && !isBeachPlaying) {
+            currentMusic = &musicBeach;
+            PlayMusicStream(musicBeach);
+            isBeachPlaying = true;
+        } else if (currentScreen != VICTORY && isBeachPlaying) {
+            currentMusic = &musicShallows;
+            PlayMusicStream(musicShallows);
+            isBeachPlaying = false;
+        }
+
         switch (currentScreen) {
             case MENU:
                 if (IsKeyPressed(KEY_ONE)) currentScreen = QUIZ;
-                if (IsKeyPressed(KEY_TWO)) currentScreen = DODGE;
+                if (IsKeyPressed(KEY_TWO)) {
+                    currentScreen = DODGE;
+                    InitDodge(); 
+                }
                 if (IsKeyPressed(KEY_THREE)) currentScreen = COLLECT;
                 break;
             case QUIZ:    UpdateQuiz(&currentScreen, &victoryMsg); break;
@@ -26,7 +52,7 @@ int main(void) {
                 break;
         }
 
-        // --- DRAW ---
+       
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
@@ -47,8 +73,14 @@ int main(void) {
         }
 
         EndDrawing();
+
     }
 
+    // Unload assets
+    UnloadMusicStream(musicShallows);
+    UnloadMusicStream(musicBeach);
+    CloseAudioDevice();
+    UnloadDodge();
     CloseWindow();
     return 0;
 }
